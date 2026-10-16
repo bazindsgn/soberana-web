@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import soberanaLogo from '../recursos/soberana.svg'
-import featuredImage from '../recursos/destacada.png'
+import featuredImage from '../recursos/destacada.webp'
 import grayGlitch from '../recursos/Vector.svg'
 import denseGlitch from '../recursos/Vector-1.svg'
 import blueIntervention from '../recursos/Vector-2.svg'
