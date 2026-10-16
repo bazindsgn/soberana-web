@@ -102,7 +102,8 @@ function getInitialRoute() {
 
 function useGlitchEffect() {
   useEffect(() => {
-    const selector = 'button:not(:disabled), .skip-link, .area-card'
+    const selector = '.area-card, .button-dark, .button-outline'
+    const skippedSelector = '.area-actions, .text-link'
     const hoverQuery = window.matchMedia('(hover: hover)')
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
 
@@ -167,6 +168,7 @@ function useGlitchEffect() {
 
     const onPointerOver = (event) => {
       if (!hoverQuery.matches) return
+      if (event.target.closest?.(skippedSelector)) return
       const target = event.target.closest?.(selector)
       if (!target || (event.relatedTarget instanceof Node && target.contains(event.relatedTarget))) return
       trigger(target)
@@ -174,6 +176,7 @@ function useGlitchEffect() {
 
     const onFocusIn = (event) => {
       if (!event.target.matches?.(':focus-visible')) return
+      if (event.target.closest?.(skippedSelector)) return
       trigger(event.target.closest(selector))
     }
 
