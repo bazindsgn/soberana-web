@@ -8,6 +8,10 @@ import blueIntervention from '../recursos/Vector-2.svg'
 import darkGlitch from '../recursos/Vector-3.svg'
 import yellowIntervention from '../recursos/Vector-5.svg'
 import orangeIntervention from '../recursos/Vector-7.svg'
+import bulletinSymbol from '../recursos/Boletín corporeo oficial.svg'
+import somaticSymbol from '../recursos/agenda soberana.svg'
+import archiveSymbol from '../recursos/archivo publico.svg'
+import cabinetSymbol from '../recursos/gabinete de asuntos vocales.svg'
 import './styles.css'
 
 const events = [
@@ -41,10 +45,10 @@ const events = [
 ]
 
 const accesses = [
-  { label: 'Avisos y decretos oficiales', target: 'Boletín Oficial' },
-  { label: 'Fuerzas Somáticas', target: 'Fuerzas Somáticas' },
-  { label: 'Archivo público', target: 'Archivo Público' },
-  { label: 'Gabinete de Asuntos Vocales', target: 'Gabinete de Asuntos Vocales' },
+  { label: 'Avisos y decretos oficiales', target: 'Boletín Oficial', symbol: bulletinSymbol },
+  { label: 'Fuerzas Somáticas', target: 'Fuerzas Somáticas', symbol: somaticSymbol },
+  { label: 'Archivo público', target: 'Archivo Público', symbol: archiveSymbol },
+  { label: 'Gabinete de Asuntos Vocales', target: 'Gabinete de Asuntos Vocales', symbol: cabinetSymbol },
 ]
 
 const interestLinks = ['Institucional', 'Convocatorias', 'Contacto']
@@ -339,6 +343,7 @@ function AccessCard({ access, onNavigate }) {
 
   return (
     <a className="area-card" href={getAreaHref(access.target)} onClick={handlePrimaryNavigation}>
+      <img className="area-symbol" src={access.symbol} alt="" aria-hidden="true" />
       <h3>{access.label}</h3>
     </a>
   )
