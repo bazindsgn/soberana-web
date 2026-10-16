@@ -8,10 +8,6 @@ import blueIntervention from '../recursos/Vector-2.svg'
 import darkGlitch from '../recursos/Vector-3.svg'
 import yellowIntervention from '../recursos/Vector-5.svg'
 import orangeIntervention from '../recursos/Vector-7.svg'
-import bulletinSymbol from '../recursos/Boletín corporeo oficial.svg'
-import archiveSymbol from '../recursos/archivo publico.svg'
-import cabinetSymbol from '../recursos/gabinete de asuntos vocales.svg'
-import agendaSymbol from '../recursos/agenda soberana.svg'
 import './styles.css'
 
 const events = [
@@ -44,12 +40,14 @@ const events = [
   },
 ]
 
-const areas = [
-  { symbol: bulletinSymbol, name: 'Boletín Oficial', description: 'Comunicados y novedades.', actions: ['Descargar última edición'] },
-  { symbol: archiveSymbol, name: 'Archivo Público', description: 'Libros, películas y documentales.', actions: [] },
-  { symbol: cabinetSymbol, name: 'Gabinete de Asuntos Vocales', description: 'Programas audiovisuales.', actions: ['Ver episodios'] },
-  { symbol: agendaSymbol, name: 'Agenda Soberana', description: '', actions: [] },
+const accesses = [
+  { label: 'Avisos y decretos oficiales', target: 'Boletín Oficial' },
+  { label: 'Fuerzas Somáticas', target: 'Fuerzas Somáticas' },
+  { label: 'Archivo público', target: 'Archivo Público' },
+  { label: 'Gabinete de Asuntos Vocales', target: 'Gabinete de Asuntos Vocales' },
 ]
+
+const interestLinks = ['Institucional', 'Convocatorias', 'Contacto']
 
 const searchItems = [
   { type: 'Boletín Oficial', date: '2026-10-12', title: 'Comunicado institucional de octubre', text: 'Actualización sobre actividades y programas de Soberana.' },
@@ -103,7 +101,6 @@ function getInitialRoute() {
 function useGlitchEffect() {
   useEffect(() => {
     const selector = '.area-card, .button-dark, .button-outline'
-    const skippedSelector = '.area-actions, .text-link'
     const hoverQuery = window.matchMedia('(hover: hover)')
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
 
@@ -168,7 +165,6 @@ function useGlitchEffect() {
 
     const onPointerOver = (event) => {
       if (!hoverQuery.matches) return
-      if (event.target.closest?.(skippedSelector)) return
       const target = event.target.closest?.(selector)
       if (!target || (event.relatedTarget instanceof Node && target.contains(event.relatedTarget))) return
       trigger(target)
@@ -176,7 +172,6 @@ function useGlitchEffect() {
 
     const onFocusIn = (event) => {
       if (!event.target.matches?.(':focus-visible')) return
-      if (event.target.closest?.(skippedSelector)) return
       trigger(event.target.closest(selector))
     }
 
@@ -323,55 +318,29 @@ function Home({ onNavigate, onOpenEvent }) {
       </section>
 
       <div className="container home-content">
-        <section className="areas" aria-labelledby="areas-title">
-          <h2 id="areas-title" className="sr-only">Áreas de contenido</h2>
-          <div className="areas-grid">
-            {areas.map((area) => <AreaCard key={area.name} area={area} onNavigate={onNavigate} />)}
+        <section className="accesses" aria-label="Accesos">
+          <div className="accesses-grid">
+            {accesses.map((access) => <AccessCard key={access.label} access={access} onNavigate={onNavigate} />)}
           </div>
         </section>
 
         <AgendaCalendar onNavigate={onNavigate} onOpenEvent={onOpenEvent} />
-        <Search />
       </div>
     </>
   )
 }
 
-function AreaCard({ area, onNavigate }) {
-  const downloadSample = () => {
-    const sample = 'SOBERANA — BOLETÍN OFICIAL\nEdición de muestra para evaluación del prototipo.\nOctubre de 2026.\n\nEste archivo no constituye una publicación oficial.'
-    const url = URL.createObjectURL(new Blob([sample], { type: 'text/plain;charset=utf-8' }))
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'soberana-boletin-edicion-de-muestra.txt'
-    link.click()
-    URL.revokeObjectURL(url)
-  }
-
-  const handleAction = (action) => {
-    if (action === 'Descargar última edición') downloadSample()
-    else onNavigate(area.name)
-  }
-
+function AccessCard({ access, onNavigate }) {
   const handlePrimaryNavigation = (event) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
     event.preventDefault()
-    onNavigate(area.name)
+    onNavigate(access.target)
   }
 
   return (
-    <article className="area-card">
-      <span className="area-symbol" aria-hidden="true"><img src={area.symbol} alt="" /></span>
-      <div className="area-body">
-        <h3><a className="area-primary-link" href={getAreaHref(area.name)} onClick={handlePrimaryNavigation}>{area.name} <Arrow className="area-arrow" /></a></h3>
-        {area.description && <p>{area.description}</p>}
-      </div>
-      {area.actions.length > 0 && (
-        <div className="area-actions">
-          {area.actions.map((action) => <button key={action} className="text-link" onClick={() => handleAction(action)}>{action} <Arrow className="area-arrow" /></button>)}
-        </div>
-      )}
-    </article>
+    <a className="area-card" href={getAreaHref(access.target)} onClick={handlePrimaryNavigation}>
+      <h3>{access.label}</h3>
+    </a>
   )
 }
 
@@ -397,49 +366,57 @@ function AgendaCalendar({ onNavigate, onOpenEvent }) {
 
   return (
     <section className="agenda-section" aria-labelledby="agenda-title">
-      <div className="agenda-titlebar">
-        <h2 id="agenda-title">Agenda Soberana</h2>
-        <span className="agenda-mark" aria-hidden="true">10—26</span>
-      </div>
       <div className="agenda-content">
-        <div className="calendar-panel">
-          <div className="calendar-controls">
-            <h3 aria-live="polite">{monthLabel}</h3>
-            <div>
-              <button className="icon-button" onClick={() => moveMonth(-1)} aria-label="Mes anterior"><Arrow direction="left" /></button>
-              <button className="icon-button" onClick={() => moveMonth(1)} aria-label="Mes siguiente"><Arrow /></button>
+        <h2 id="agenda-title" className="agenda-title">Agenda soberana</h2>
+
+        <div className="agenda-main">
+          <div className="calendar-panel">
+            <div className="calendar-controls">
+              <h3 aria-live="polite">{monthLabel}</h3>
+              <div>
+                <button className="icon-button" onClick={() => moveMonth(-1)} aria-label="Mes anterior"><Arrow direction="left" /></button>
+                <button className="icon-button" onClick={() => moveMonth(1)} aria-label="Mes siguiente"><Arrow /></button>
+              </div>
+            </div>
+            <div className="calendar" role="grid" aria-label={`Calendario de ${monthLabel}`}>
+              {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((day) => <div className="weekday" role="columnheader" key={day}>{day}</div>)}
+              {cells.map((day, index) => {
+                if (!day) return <div className="calendar-empty" key={`empty-${index}`} role="gridcell" />
+                const date = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+                const hasEvent = events.some((event) => event.date === date)
+                const classes = ['calendar-day', selectedDate === date && 'selected', today === date && 'today'].filter(Boolean).join(' ')
+                return (
+                  <button key={date} className={classes} role="gridcell" aria-selected={selectedDate === date} aria-label={`${day} de ${monthLabel}${hasEvent ? ', con actividades' : ''}`} onClick={() => setSelectedDate(date)}>
+                    <span>{day}</span>{hasEvent && <i aria-hidden="true" />}
+                  </button>
+                )
+              })}
+            </div>
+            <div className="day-status" aria-live="polite">
+              <p className="eyebrow">Día seleccionado · {formatDate(selectedDate)}</p>
+              {selectedEvents.length ? selectedEvents.map((event) => <EventRow key={event.id} event={event} onOpen={onOpenEvent} compact />) : <p className="empty-message">No hay actividades programadas para este día.</p>}
             </div>
           </div>
-          <div className="calendar" role="grid" aria-label={`Calendario de ${monthLabel}`}>
-            {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((day) => <div className="weekday" role="columnheader" key={day}>{day}</div>)}
-            {cells.map((day, index) => {
-              if (!day) return <div className="calendar-empty" key={`empty-${index}`} role="gridcell" />
-              const date = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-              const hasEvent = events.some((event) => event.date === date)
-              const classes = ['calendar-day', selectedDate === date && 'selected', today === date && 'today'].filter(Boolean).join(' ')
-              return (
-                <button key={date} className={classes} role="gridcell" aria-selected={selectedDate === date} aria-label={`${day} de ${monthLabel}${hasEvent ? ', con actividades' : ''}`} onClick={() => setSelectedDate(date)}>
-                  <span>{day}</span>{hasEvent && <i aria-hidden="true" />}
-                </button>
-              )
-            })}
-          </div>
-          <div className="day-status" aria-live="polite">
-            <p className="eyebrow">Día seleccionado · {formatDate(selectedDate)}</p>
-            {selectedEvents.length ? selectedEvents.map((event) => <EventRow key={event.id} event={event} onOpen={onOpenEvent} compact />) : <p className="empty-message">No hay actividades programadas para este día.</p>}
+
+          <div className="upcoming-panel">
+            <div className="upcoming-heading">
+              <p className="eyebrow">Octubre 2026</p>
+              <h3>Próximas actividades</h3>
+            </div>
+            <div className="event-list">
+              {events.map((event) => <EventRow key={event.id} event={event} onOpen={onOpenEvent} />)}
+            </div>
+            <button className="button-outline full-button" onClick={() => onNavigate('Agenda')}>Ver calendario completo <Arrow /></button>
           </div>
         </div>
 
-        <div className="upcoming-panel">
-          <div className="upcoming-heading">
-            <p className="eyebrow">Octubre 2026</p>
-            <h3>Próximas actividades</h3>
-          </div>
-          <div className="event-list">
-            {events.map((event) => <EventRow key={event.id} event={event} onOpen={onOpenEvent} />)}
-          </div>
-          <button className="button-outline full-button" onClick={() => onNavigate('Agenda')}>Ver calendario completo <Arrow /></button>
-        </div>
+        <aside className="agenda-links" aria-labelledby="agenda-links-title">
+          <h3 id="agenda-links-title">Links de interés</h3>
+          <ul>
+            {interestLinks.map((link) => <li key={link}><button className="agenda-link" onClick={() => onNavigate(link)}>{link}</button></li>)}
+          </ul>
+          <p className="agenda-social">Redes sociales</p>
+        </aside>
       </div>
     </section>
   )
@@ -544,6 +521,7 @@ function SectionView({ name, onHome }) {
       <div className="placeholder-content">
         <h2>Contenido en preparación</h2>
       </div>
+      <Search />
     </div>
   )
 }
