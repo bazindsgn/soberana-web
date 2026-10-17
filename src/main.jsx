@@ -51,8 +51,6 @@ const accesses = [
   { label: 'Gabinete de Asuntos Vocales', target: 'Gabinete de Asuntos Vocales', symbol: cabinetSymbol },
 ]
 
-const interestLinks = ['Institucional', 'Convocatorias', 'Contacto']
-
 const searchItems = [
   { type: 'Boletín Oficial', date: '2026-10-12', title: 'Comunicado institucional de octubre', text: 'Actualización sobre actividades y programas de Soberana.' },
   { type: 'Archivo Público', date: '2026-09-28', title: 'Cuaderno de cultura pública', text: 'Publicación de consulta abierta sobre prácticas culturales.' },
@@ -415,13 +413,6 @@ function AgendaCalendar({ onNavigate, onOpenEvent }) {
           </div>
         </div>
 
-        <aside className="agenda-links" aria-labelledby="agenda-links-title">
-          <h3 id="agenda-links-title">Links de interés</h3>
-          <ul>
-            {interestLinks.map((link) => <li key={link}><button className="agenda-link" onClick={() => onNavigate(link)}>{link}</button></li>)}
-          </ul>
-          <p className="agenda-social">Redes sociales</p>
-        </aside>
       </div>
     </section>
   )

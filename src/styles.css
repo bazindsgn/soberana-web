@@ -95,9 +95,8 @@ button:not(:disabled), .skip-link { position: relative; isolation: isolate; }
 .area-card h3 { margin-bottom: 0; overflow-wrap: anywhere; }
 
 .agenda-section { margin-bottom: 64px; }
-.agenda-content { display: grid; grid-template-columns: minmax(0, 38fr) minmax(0, 62fr); grid-template-rows: auto 1fr; column-gap: 40px; align-items: start; }
-.agenda-title { grid-column: 1; grid-row: 1; margin-bottom: 0; }
-.agenda-main { grid-column: 2; grid-row: 1 / span 2; display: grid; grid-template-columns: minmax(0, 54fr) minmax(0, 46fr); background: var(--color-white); border: 1px solid var(--color-gray); }
+.agenda-title { margin-bottom: 32px; }
+.agenda-main { display: grid; grid-template-columns: minmax(0, 70fr) minmax(0, 30fr); background: var(--color-white); border: 1px solid var(--color-gray); }
 .calendar-panel { padding: 32px; border-right: 1px solid var(--color-gray); }
 .calendar-controls { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
 .calendar-controls h3 { margin-bottom: 0; }
@@ -117,12 +116,6 @@ button:not(:disabled), .skip-link { position: relative; isolation: isolate; }
 .day-status { border-top: 1px solid var(--color-gray); margin-top: 24px; padding-top: 24px; }
 .empty-message { margin-bottom: 0; }
 .upcoming-panel { padding: 32px; }
-.agenda-links { grid-column: 1; grid-row: 2; align-self: end; padding-right: 40px; }
-.agenda-links h3 { margin-bottom: 16px; }
-.agenda-links ul { margin: 0 0 24px; padding: 0; list-style: none; display: grid; gap: 8px; justify-items: start; }
-.agenda-link { padding: 0; border: 0; border-bottom: 1px solid transparent; background: none; cursor: pointer; text-align: left; }
-.agenda-link:hover { border-bottom-color: var(--color-orange); color: var(--color-orange); }
-.agenda-social { margin-bottom: 0; text-decoration: underline; }
 .upcoming-heading { margin-bottom: 16px; }
 .upcoming-heading h3 { margin-bottom: 0; }
 .event-list { margin-bottom: 16px; }
@@ -211,8 +204,6 @@ button:not(:disabled), .skip-link { position: relative; isolation: isolate; }
 
 @media (max-width: 1024px) {
   .accesses-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .agenda-content { display: flex; flex-direction: column; align-items: stretch; gap: 32px; }
-  .agenda-links { align-self: auto; padding-right: 0; }
 }
 
 @media (max-width: 768px) {
